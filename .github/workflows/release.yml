@@ -38,6 +38,9 @@ jobs:
       - name: Configure npm token
         run: echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
 
+      - name: Test NPM whoami
+        run: npm whoami
+
       - name: Install dependencies
         run: npm ci
 
