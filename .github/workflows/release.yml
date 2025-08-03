@@ -2,8 +2,9 @@ name: Publish Package to npm
 
 # Trigger this workflow whenever a new release is published
 on:
-  release:
-    types: [published]
+  push:
+    branches:
+      - main
 
 # Grant write permissions to the repository contents so we can push version updates
 permissions:
@@ -39,29 +40,29 @@ jobs:
       - name: Run tests
         run: npm test
 
-      # Step 5: Update package.json to match the release tag
-      # The release tag (e.g., v1.0.1) is extracted, and npm version sets package.json version accordingly.
-      # The --no-git-tag-version flag ensures npm doesn't create its own tags.
-      # This step keeps package.json's version aligned with the release tag you just created.
-      - name: Update package.json with release tag
-        run: |
-          TAG="${{ github.event.release.tag_name }}"
-          echo "Updating package.json version to $TAG"
-          npm version "$TAG" --no-git-tag-version
-
-      # Step 6: Commit and push the updated package.json and package-lock.json back to the repo
-      # This ensures your repository always reflects the exact version published.
-      # We use the GITHUB_TOKEN to authenticate and the granted write permissions to push changes.
-      - name: Commit and push version update
-        run: |
-          TAG="${{ github.event.release.tag_name }}"
-          git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
-          git add package.json package-lock.json
-          git commit -m "Update package.json to version $TAG"
-          git push origin ${{ github.event.repository.default_branch }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#      # Step 5: Update package.json to match the release tag
+#      # The release tag (e.g., v1.0.1) is extracted, and npm version sets package.json version accordingly.
+#      # The --no-git-tag-version flag ensures npm doesn't create its own tags.
+#      # This step keeps package.json's version aligned with the release tag you just created.
+#      - name: Update package.json with release tag
+#        run: |
+#          TAG="${{ github.event.release.tag_name }}"
+#          echo "Updating package.json version to $TAG"
+#          npm version "$TAG" --no-git-tag-version
+#
+#      # Step 6: Commit and push the updated package.json and package-lock.json back to the repo
+#      # This ensures your repository always reflects the exact version published.
+#      # We use the GITHUB_TOKEN to authenticate and the granted write permissions to push changes.
+#      - name: Commit and push version update
+#        run: |
+#          TAG="${{ github.event.release.tag_name }}"
+#          git config user.name "github-actions"
+#          git config user.email "github-actions@github.com"
+#          git add package.json package-lock.json
+#          git commit -m "Update package.json to version $TAG"
+#          git push origin ${{ github.event.repository.default_branch }}
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # Step 7: Publish the new version to npm
       # The NODE_AUTH_TOKEN is your npm access token stored as a secret.
