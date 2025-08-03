@@ -19,6 +19,7 @@ pnpm-debug.log*
 # --------------------------
 .env
 .env.*.local
+.npmrc
 
 # --------------------------
 # IDEs & Editors
