@@ -1,3 +1,10 @@
+## [0.3.4](https://github.com/patrick-radius/Eventora/compare/v0.3.3...v0.3.4) (2025-08-03)
+
+
+### Bug Fixes
+
+* add exports to the package ([512f4f0](https://github.com/patrick-radius/Eventora/commit/512f4f065d736230b05b9680bd66dbae78cec519))
+
 ## [0.3.3](https://github.com/patrick-radius/Eventora/compare/v0.3.2...v0.3.3) (2025-08-03)
 
 
