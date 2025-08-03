@@ -68,6 +68,6 @@ jobs:
       # The NODE_AUTH_TOKEN is your npm access token stored as a secret.
       # npm publish --access public makes the package available to anyone on npm.
       - name: Publish to npm
-        run: npm publish --access public
+        run: npx semantic-release
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
