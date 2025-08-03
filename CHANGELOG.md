@@ -1,3 +1,10 @@
+## [0.3.3](https://github.com/patrick-radius/Eventora/compare/v0.3.2...v0.3.3) (2025-08-03)
+
+
+### Bug Fixes
+
+* add missing tag ([928b5d1](https://github.com/patrick-radius/Eventora/commit/928b5d1b6d80c5f151142758eb8e57ff6b758e7f))
+
 ## [0.3.1](https://github.com/patrick-radius/Eventora/compare/v0.3.0...v0.3.1) (2025-08-03)
 
 
