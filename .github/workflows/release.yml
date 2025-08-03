@@ -35,6 +35,9 @@ jobs:
             echo "NPM_TOKEN is NOT SET"
           fi
 
+      - name: Configure npm token
+        run: echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
+
       - name: Install dependencies
         run: npm ci
 
