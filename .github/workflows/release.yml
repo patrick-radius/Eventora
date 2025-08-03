@@ -19,6 +19,7 @@ jobs:
       # This makes your code available for subsequent steps like installing dependencies and running tests.
       - uses: actions/checkout@v4
         with:
+          fetch-depth: 0  # fetch all history and tags
           token: ${{ secrets.GITHUB_TOKEN }}
           ref: ${{ github.event.repository.default_branch }}
 
