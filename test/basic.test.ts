@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { Aggregate, CommandHandler, EventHandler } from '../src/decorators.js';
-import { buildDispatcher } from '../src/bus.js';
+import { commandDispatcher } from '../src/bus.js';
 import { registerEvent } from '../src/eventRegistry.js';
 import {clearStore, InMemoryEventStore} from '../src/inMemoryEventStore.js';
 import type { Command } from '../src/types.js';
@@ -14,7 +14,7 @@ class TestEvent {
 }
 registerEvent('TestEvent', TestEvent);
 
-const dispatchCommand = buildDispatcher(new InMemoryEventStore())
+const dispatchCommand = commandDispatcher(new InMemoryEventStore())
 
 @Aggregate()
 class TestAggregate {

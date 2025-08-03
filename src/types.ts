@@ -17,3 +17,10 @@ export interface EventHandlerMeta {
   method: (event: Event, context: { aggregateId: string }) => void | Promise<void>;
   target: any;
 }
+
+
+export interface ContextProvider {
+  getAccountId(): string;
+
+  getUserId(): string;
+}

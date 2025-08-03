@@ -5,7 +5,7 @@ import { eventToPayload } from './utils.js';
 import type { Command, Event } from './types.js';
 import {EventStore} from "./EventStore";
 
-export function buildDispatcher(eventStore: EventStore) {
+export function commandDispatcher(eventStore: EventStore) {
   return async function dispatchCommand(command: Command): Promise<Event[]> {
     const handlerMeta = registry.commandHandlers.find(h => command instanceof h.commandType);
     if (!handlerMeta) throw new Error(`No handler found for command: ${command.constructor.name}`);
