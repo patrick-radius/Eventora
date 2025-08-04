@@ -1,3 +1,10 @@
+## [0.4.4](https://github.com/patrick-radius/Eventora/compare/v0.4.3...v0.4.4) (2025-08-04)
+
+
+### Bug Fixes
+
+* build the package before publishing ([50b0c60](https://github.com/patrick-radius/Eventora/commit/50b0c600fe4e1becd91d02d3561af70a0aa555cf))
+
 ## [0.4.3](https://github.com/patrick-radius/Eventora/compare/v0.4.2...v0.4.3) (2025-08-04)
 
 
