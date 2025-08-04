@@ -1,3 +1,10 @@
+# [0.4.0](https://github.com/patrick-radius/Eventora/compare/v0.3.4...v0.4.0) (2025-08-04)
+
+
+### Features
+
+* add possibility to use Projectors ([463e070](https://github.com/patrick-radius/Eventora/commit/463e070cb5cded183a488cc6d31b786d4751b3b5))
+
 ## [0.3.4](https://github.com/patrick-radius/Eventora/compare/v0.3.3...v0.3.4) (2025-08-03)
 
 
