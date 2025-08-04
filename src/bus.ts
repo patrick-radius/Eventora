@@ -29,12 +29,12 @@ export function commandDispatcher(eventStore: EventStore, logger?: Logger) {
 
     for (const event of newEvents) {
       await eventStore.appendEvent(aggregateId, aggregateClass.name, event.constructor.name, eventToPayload(event), context);
-      await emitEvent(event, { aggregateId }, aggregate);
+      await emitEvent(event, { ...context, aggregateId }, aggregate);
 
       for (const handler of registry.projectionHandlers) {
         if (event instanceof handler.eventType) {
           try {
-            await handler.method(event, { aggregateId });
+            await handler.method(event, { ...context, aggregateId });
           } catch (err) {
             logger?.warn(
                 `[Eventora] Projection handler for ${handler.eventType.name} in ${handler.target.constructor.name} threw an error:`,
