@@ -10,8 +10,11 @@ class TestCommand implements Command {
 }
 
 class TestEvent {
+  static type: string = 'TestEvent';
+
   constructor(public readonly value: string) {}
 }
+
 registerEvent('TestEvent', TestEvent);
 @Projector()
 class TestProjector {

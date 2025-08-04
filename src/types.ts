@@ -6,6 +6,11 @@ export interface Event {
   [key: string]: any;
 }
 
+export interface EventClass<T extends Event = Event> {
+  new (...args: any[]): T;
+  type: string;
+}
+
 export interface CommandHandlerMeta<T extends Command = Command> {
   commandType: new (...args: any[]) => T;
   method: (command: T) => Event | Event[] | Promise<Event | Event[]>;
