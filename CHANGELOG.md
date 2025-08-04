@@ -1,3 +1,10 @@
+## [0.4.5](https://github.com/patrick-radius/Eventora/compare/v0.4.4...v0.4.5) (2025-08-04)
+
+
+### Bug Fixes
+
+* add missing export ([090e54c](https://github.com/patrick-radius/Eventora/commit/090e54c28219b45b082878c32ef1fd5e84b598ff))
+
 ## [0.4.4](https://github.com/patrick-radius/Eventora/compare/v0.4.3...v0.4.4) (2025-08-04)
 
 
