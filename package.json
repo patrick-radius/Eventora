@@ -25,5 +25,11 @@
   },
   "peerDependencies": {
     "pg": "^8.16.3"
-  }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ]
 }
