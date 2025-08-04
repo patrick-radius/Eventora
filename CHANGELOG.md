@@ -1,3 +1,10 @@
+## [0.4.6](https://github.com/patrick-radius/Eventora/compare/v0.4.5...v0.4.6) (2025-08-04)
+
+
+### Bug Fixes
+
+* allow setting static names for the events so that they survive minification ([39c3d32](https://github.com/patrick-radius/Eventora/commit/39c3d32326263bc9040132e74083e8b4b6c30e80))
+
 ## [0.4.5](https://github.com/patrick-radius/Eventora/compare/v0.4.4...v0.4.5) (2025-08-04)
 
 
