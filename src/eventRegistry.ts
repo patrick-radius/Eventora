@@ -37,3 +37,15 @@ export function rehydrateEvent(eventType: string, payload: Record<string, any>):
   if (!EventClass) throw new Error(`Unknown event type: ${eventType}`);
   return new EventClass(...Object.values(payload));
 }
+
+export function getEventTypeByConstructor(constructor: (new (...args: any[]) => Event)): string | undefined {
+  const registry = getGlobalRegistry();
+
+  for (const [type, ctor] of registry.entries()) {
+    if (ctor === constructor) {
+      return type;
+    }
+  }
+
+  return undefined;
+}

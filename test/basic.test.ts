@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { Aggregate, CommandHandler, EventHandler, ProjectionHandler, Projector, commandDispatcher } from '../src';
+import { Aggregate, CommandHandler, EventType, EventHandler, ProjectionHandler, Projector, commandDispatcher } from '../src';
 import {clearRegistry, getGlobalRegistry, registerEvent} from '../src/eventRegistry.js';
 import {clearStore, InMemoryEventStore} from '../src/inMemoryEventStore.js';
 import type { Command } from '../src';
@@ -9,13 +9,13 @@ class TestCommand implements Command {
   constructor(public readonly aggregateId: string, public readonly value: string) {}
 }
 
+@EventType('TestEvent')
 class TestEvent {
-  static type: string = 'TestEvent';
+  static type = 'TestEvent';
 
   constructor(public readonly value: string) {}
 }
 
-registerEvent('TestEvent', TestEvent);
 @Projector()
 class TestProjector {
   state: string[] = [];

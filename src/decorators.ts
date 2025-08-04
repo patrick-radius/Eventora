@@ -1,5 +1,6 @@
 import { registry } from './registry.js';
-import type {Command, CommandHandlerMeta, Event} from './types.js';
+import {Command, CommandHandlerMeta, Event} from './types.js';
+import {registerEvent} from "./eventRegistry";
 
 export function Aggregate() {
   return (target: Function) => {
@@ -13,6 +14,11 @@ export function Projector() {
   };
 }
 
+export function EventType(type: string) {
+  return function (constructor: new (...args: any[]) => any) {
+    registerEvent(type, constructor);
+  };
+}
 
 export function CommandHandler<T extends Command>(commandType: new (...args: any[]) => T) {
   return (

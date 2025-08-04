@@ -4,6 +4,7 @@ import {emitEvent} from './emitEvent.js';
 import {eventToPayload} from './utils.js';
 import type {Command, Event, EventClass} from './types.js';
 import {EventStore} from "./EventStore";
+import {getEventTypeByConstructor} from "./eventRegistry";
 
 interface Logger {
     warn: (...args: any[]) => void;
@@ -33,7 +34,7 @@ export function commandDispatcher(eventStore: EventStore, logger?: Logger) {
             await eventStore.appendEvent(
                 aggregateId,
                 aggregateClass.type ?? aggregateClass.name,
-                eventClass.type ?? event.constructor.name,
+                getEventTypeByConstructor(eventClass) ?? eventClass.type ?? event.constructor.name,
                 eventToPayload(event),
                 context
             );
