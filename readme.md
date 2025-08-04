@@ -1,128 +1,170 @@
-# Eventora
+## Eventora
 
-**Eventora** is a lightweight, decorator-based CQRS and Event Sourcing framework for TypeScript applications. Inspired by the Axon Framework, it’s designed for simplicity and flexibility in the Node.js ecosystem.
+**Eventora** is a lightweight CQRS and Event Sourcing framework for TypeScript, inspired by Axon Framework. It supports decorators for aggregates, command handlers, and event handlers, and includes support for in-memory and Postgres-based event stores.
 
-- 🧠 Command and event handling via decorators
-- 🗂️ Event store with PostgreSQL or in-memory support
-- 🔁 Built-in support for event replay and projections
-- 🔍 Fully typed with TypeScript
-- 🧪 Easy to test with Vitest
-- ⚡ ESM-ready
+### Features
+
+* Lightweight decorator-based API
+* Command and event handler registration
+* In-memory and Postgres event store implementations
+* Simple registry for mapping commands and events to handlers
+* Built-in event rehydration
 
 ---
-
-## Getting Started
 
 ### Installation
 
 ```bash
-npm install Eventora
+npm install @patrick-radius/eventora
 ```
 
 ---
 
-## Usage
+### Usage
 
-### 1. Define an Aggregate
+#### 1. Define Events and Commands
 
 ```ts
-import { Aggregate, CommandHandler, EventHandler } from 'Eventora'
-
-interface State {
-  title: string
+// events.ts
+export class MealPlanned implements Event {
+  constructor(public readonly date: string, public readonly meal: string) {}
 }
+
+// commands.ts
+export class PlanMeal implements Command {
+  constructor(public readonly aggregateId: string, public readonly date: string, public readonly meal: string) {}
+}
+```
+
+#### 2. Register Events
+
+```ts
+// registerEvents.ts
+import { registerEvent } from '@patrick-radius/eventora';
+import { MealPlanned } from './events';
+
+registerEvent('MealPlanned', MealPlanned);
+```
+
+#### 3. Create an Aggregate
+
+```ts
+// meal.aggregate.ts
+import { Aggregate, CommandHandler, EventHandler } from '@patrick-radius/eventora';
+import { PlanMeal } from './commands';
+import { MealPlanned } from './events';
 
 @Aggregate()
-export class Recipe {
-  private state: State = { title: '' }
+export class MealAggregate {
+  private plannedMeals: Record<string, string> = {};
 
-  @CommandHandler('RenameRecipe')
-  renameRecipe(command: { title: string }) {
-    return [{ type: 'RecipeRenamed', payload: { title: command.title } }]
+  @CommandHandler(PlanMeal)
+  planMeal(command: PlanMeal) {
+    if (this.plannedMeals[command.date]) {
+      throw new Error('Meal already planned for this date');
+    }
+    return new MealPlanned(command.date, command.meal);
   }
 
-  @EventHandler('RecipeRenamed')
-  applyRecipeRenamed(event: { title: string }) {
-    this.state.title = event.title
+  @EventHandler(MealPlanned)
+  applyMealPlanned(event: MealPlanned) {
+    this.plannedMeals[event.date] = event.meal;
   }
 }
 ```
 
----
-
-### 2. Dispatch a Command
+#### 4. Dispatch a Command
 
 ```ts
-import { InMemoryEventStore, CommandDispatcher, AggregateRegistry } from 'Eventora'
-import { Recipe } from './Recipe'
+import { dispatchCommand } from '@patrick-radius/eventora';
+import { PlanMeal } from './commands';
+import './registerEvents'; // Important: Register event types first
 
-const registry = new AggregateRegistry()
-registry.register(Recipe)
-
-const store = new InMemoryEventStore()
-const dispatcher = new CommandDispatcher({ registry, eventStore: store })
-
-await dispatcher.dispatch({
-  aggregateId: 'r1',
-  aggregateType: 'Recipe',
-  commandType: 'RenameRecipe',
-  payload: { title: 'Chili sin carne' },
-})
+await dispatchCommand(new PlanMeal('abc-123', '2025-08-04', 'Lasagna'));
 ```
 
+---
+
+### Event Stores
+
+#### InMemoryEventStore
+
+```ts
+import { InMemoryEventStore } from '@patrick-radius/eventora';
+
+const store = new InMemoryEventStore();
+```
+
+#### PostgresEventStore
+
+```ts
+import { PostgresEventStore } from '@patrick-radius/eventora';
+import { Pool } from 'pg';
+
+const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+const store = new PostgresEventStore(pool);
+```
+
+#### MultiTenantPostgresEventStore
+
+```ts
+import { MultiTenantPostgresEventStore } from '@patrick-radius/eventora';
+import { Pool } from 'pg';
+
+const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+
+class ContextProvider {
+    getAccountId(): string {
+        return 'fe75fc7c-f291-4ffd-afa3-85da2ac3185e';
+    }
+
+    getUserId(): string {
+        return '00a82bbf-c674-47a8-9cf6-ce37cc07c234';
+    }
+
+}
+
+const eventStore = new MultiTenantPostgresEventStore(pool, new ContextProvider())```
+```
 ---
 
 ### 3. Project Events to a Read Model
 
 ```ts
-import { Projection, EventHandler } from 'Eventora'
+import { Projector, ProjectionHandler } from 'eventora'
+import { pool } from './db' // PostgreSQL connection using pg or equivalent
 
-@Projection()
+@Projector()
 export class RecipeProjection {
-  recipes: Record<string, string> = {}
+    @ProjectionHandler('RecipeRenamed')
+    async onRecipeRenamed(event: { title: string }, { aggregateId }: { aggregateId: string }) {
+        await pool.query(
+            `UPDATE recipe_projection SET title = $1 WHERE id = $2`,
+            [event.title, aggregateId]
+        )
+    }
 
-  @EventHandler('RecipeRenamed')
-  onRecipeRenamed(event: { title: string }, { aggregateId }: { aggregateId: string }) {
-    this.recipes[aggregateId] = event.title
-  }
+    @ProjectionHandler('RecipeCreated')
+    async onRecipeCreated(event: { title: string }, { aggregateId }: { aggregateId: string }) {
+        await pool.query(
+            `INSERT INTO recipe_projection (id, title) VALUES ($1, $2)`,
+            [aggregateId, event.title]
+        )
+    }
 }
 ```
+> 🧠 Unlike aggregates, projectors are not expected to keep state in memory. Instead, they should write to a fast, queryable read model — such as a Postgres table, Redis cache, or search index.
+---
+
+
+### Development
+
+* Run tests: `npm test`
+* Build: `npm run build`
+* Type check: `npm run typecheck`
 
 ---
 
-## Features
-
-- ✅ Command dispatching via decorators
-- ✅ Event application and replay support
-- ✅ Multiple aggregates and projections
-- ✅ PostgreSQL or in-memory event store
-- ✅ Type-safe events and commands
-- ✅ Pure ESM module
-- ✅ Vitest-ready for unit testing
-
----
-
-## Testing
-
-Eventora uses Vitest for unit testing.
-
-```bash
-npm test
-```
-
-You can switch between the in-memory event store and a PostgreSQL-backed store for different environments.
-
----
-
-## Future Ideas
-
-- Snapshotting support
-- Saga / process manager support
-- CLI tooling
-- Event versioning strategies
-
----
-
-## License
+### License
 
 MIT

@@ -6,13 +6,19 @@ export interface Event {
   [key: string]: any;
 }
 
-export interface CommandHandlerMeta {
-  commandType: new (...args: any[]) => Command;
-  method: (command: Command) => Event | Event[] | Promise<Event | Event[]>;
+export interface CommandHandlerMeta<T extends Command = Command> {
+  commandType: new (...args: any[]) => T;
+  method: (command: T) => Event | Event[] | Promise<Event | Event[]>;
   target: any;
 }
 
 export interface EventHandlerMeta {
+  eventType: new (...args: any[]) => Event;
+  method: (event: Event, context: { aggregateId: string }) => void | Promise<void>;
+  target: any;
+}
+
+export interface ProjectionHandlerMeta {
   eventType: new (...args: any[]) => Event;
   method: (event: Event, context: { aggregateId: string }) => void | Promise<void>;
   target: any;
