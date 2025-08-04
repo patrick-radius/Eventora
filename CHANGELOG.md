@@ -1,3 +1,10 @@
+## [0.4.7](https://github.com/patrick-radius/Eventora/compare/v0.4.6...v0.4.7) (2025-08-04)
+
+
+### Bug Fixes
+
+* add EventType decorator to register the events ([24162ef](https://github.com/patrick-radius/Eventora/commit/24162ef5df818128c1a09d14b839187a595b4282))
+
 ## [0.4.6](https://github.com/patrick-radius/Eventora/compare/v0.4.5...v0.4.6) (2025-08-04)
 
 
