@@ -1,3 +1,10 @@
+## [0.4.3](https://github.com/patrick-radius/Eventora/compare/v0.4.2...v0.4.3) (2025-08-04)
+
+
+### Bug Fixes
+
+* package the correct directory ([60975b8](https://github.com/patrick-radius/Eventora/commit/60975b802afd28df19ca4d4cbd0161607401a04f))
+
 ## [0.4.2](https://github.com/patrick-radius/Eventora/compare/v0.4.1...v0.4.2) (2025-08-04)
 
 
