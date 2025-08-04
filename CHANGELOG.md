@@ -1,3 +1,10 @@
+## [0.4.1](https://github.com/patrick-radius/Eventora/compare/v0.4.0...v0.4.1) (2025-08-04)
+
+
+### Bug Fixes
+
+* allow passing context to the command bus ([d50e9bb](https://github.com/patrick-radius/Eventora/commit/d50e9bbb367931447d5393d3996c0b900354db74))
+
 # [0.4.0](https://github.com/patrick-radius/Eventora/compare/v0.3.4...v0.4.0) (2025-08-04)
 
 
