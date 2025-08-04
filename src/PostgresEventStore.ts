@@ -1,12 +1,11 @@
 import {Pool} from 'pg';
 import {rehydrateEvent} from './eventRegistry.js';
-import type {ContextProvider, Event} from './types.js';
+import type {Event} from './types.js';
 import {EventStore} from './EventStore';
 
 
 export class PostgresEventStore implements EventStore {
-    constructor(private readonly pool: Pool, private readonly context: ContextProvider,
-    ) {
+    constructor(private readonly pool: Pool) {
     }
 
     // Append a single event for an aggregate
@@ -15,6 +14,7 @@ export class PostgresEventStore implements EventStore {
         aggregateType: string,
         eventType: string,
         payload: object,
+        context: Record<string, any> = {}
     ): Promise<void> {
         const client = await this.pool.connect();
         try {
@@ -29,7 +29,7 @@ export class PostgresEventStore implements EventStore {
     }
 
     // Load all events for an aggregate in order
-    public async loadEvents(aggregateId: string): Promise<Event[]> {
+    public async loadEvents(aggregateId: string, context: Record<string, any> = {}): Promise<Event[]> {
         const client = await this.pool.connect();
         try {
             const res = await client.query(
@@ -43,10 +43,5 @@ export class PostgresEventStore implements EventStore {
         } finally {
             client.release();
         }
-    }
-
-    // Optionally: close the pool
-    public async close() {
-        await this.pool.end();
     }
 }

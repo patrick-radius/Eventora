@@ -11,11 +11,8 @@ export const registry = {
 };
 
 export function initializeProjectors() {
-  console.log('initialise projectors')
   for (const Constructor of registry.projectors) {
     const instance = new Constructor();
-
-    console.log('projectionHandlers', registry.projectionHandlers);
 
     for (const handler of registry.projectionHandlers) {
       if (handler.target.constructor === Constructor) {
@@ -23,8 +20,6 @@ export function initializeProjectors() {
         handler.method = handler.method.bind(instance);
       }
     }
-
-    console.log(registry.projectionHandlers);
 
     registry.projectorInstances.push(instance);
   }

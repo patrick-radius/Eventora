@@ -12,7 +12,7 @@ interface Logger {
 export function commandDispatcher(eventStore: EventStore, logger?: Logger) {
   initializeProjectors();
 
-  return async function dispatchCommand(command: Command): Promise<Event[]> {
+  return async function dispatchCommand(command: Command, context: Record<string, any> = {}): Promise<Event[]> {
     const handlerMeta = registry.commandHandlers.find(h => command instanceof h.commandType);
     if (!handlerMeta) throw new Error(`No handler found for command: ${command.constructor.name}`);
 
@@ -20,7 +20,7 @@ export function commandDispatcher(eventStore: EventStore, logger?: Logger) {
     const aggregateId = command.aggregateId;
     if (!aggregateId) throw new Error('Command must have an aggregateId field');
 
-    const history = await eventStore.loadEvents(aggregateId);
+    const history = await eventStore.loadEvents(aggregateId, context);
     const aggregate = await replayAggregate(aggregateClass, history);
 
     const result = await handlerMeta.method.call(aggregate, command);
@@ -28,7 +28,7 @@ export function commandDispatcher(eventStore: EventStore, logger?: Logger) {
     const newEvents: Event[] = Array.isArray(result) ? result : [result];
 
     for (const event of newEvents) {
-      await eventStore.appendEvent(aggregateId, aggregateClass.name, event.constructor.name, eventToPayload(event));
+      await eventStore.appendEvent(aggregateId, aggregateClass.name, event.constructor.name, eventToPayload(event), context);
       await emitEvent(event, { aggregateId }, aggregate);
 
       for (const handler of registry.projectionHandlers) {

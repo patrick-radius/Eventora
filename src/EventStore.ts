@@ -5,8 +5,9 @@ export interface EventStore {
         aggregateId: string,
         aggregateType: string,
         eventType: string,
-        payload: object
+        payload: object,
+        context?: Record<string, any>
     ): Promise<void>
 
-    loadEvents(aggregateId: string): Promise<Event[]>
+    loadEvents(aggregateId: string, context?: Record<string, any>): Promise<Event[]>
 }
