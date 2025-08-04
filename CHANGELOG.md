@@ -1,3 +1,10 @@
+## [0.4.2](https://github.com/patrick-radius/Eventora/compare/v0.4.1...v0.4.2) (2025-08-04)
+
+
+### Bug Fixes
+
+* pass context to event handlers and projection handlers ([5185452](https://github.com/patrick-radius/Eventora/commit/51854523b2ba1f9f0e3213745632cd91b530e0bf))
+
 ## [0.4.1](https://github.com/patrick-radius/Eventora/compare/v0.4.0...v0.4.1) (2025-08-04)
 
 
