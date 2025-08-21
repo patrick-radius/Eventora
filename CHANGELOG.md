@@ -1,3 +1,10 @@
+## [0.4.8](https://github.com/patrick-radius/Eventora/compare/v0.4.7...v0.4.8) (2025-08-21)
+
+
+### Bug Fixes
+
+* Make the MultiTenantEventStore composable ([4e788d3](https://github.com/patrick-radius/Eventora/commit/4e788d3ec4aa5bc41e2a69efee88bd82c238e1e7))
+
 ## [0.4.7](https://github.com/patrick-radius/Eventora/compare/v0.4.6...v0.4.7) (2025-08-04)
 
 
