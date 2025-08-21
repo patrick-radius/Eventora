@@ -1,5 +1,5 @@
 export { InMemoryEventStore } from './inMemoryEventStore.js'
-export { MultiTenantPostgresEventStore } from './MultiTenantPostgresEventStore.js'
+export { MultiTenantEventStore } from './MultiTenantEventStore'
 export { PostgresEventStore } from './PostgresEventStore.js'
 
 export { Command } from './types'

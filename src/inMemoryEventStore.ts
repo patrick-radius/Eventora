@@ -8,6 +8,10 @@ export interface Logger {
     debug: (...args: any[]) => void;
 }
 
+function getNamespacedId(aggregateId: string, context: Record<string, any>) {
+    return context && context.accountId ? `${context.accountId}:${aggregateId}` : aggregateId;
+}
+
 export class InMemoryEventStore implements EventStore {
     private readonly logger?: Logger;
 
@@ -25,9 +29,10 @@ export class InMemoryEventStore implements EventStore {
         payload: object,
         context: Record<string, any> = {}
     ): Promise<void> {
-        const events = __store.get(aggregateId) || [];
+        const namespacedId = getNamespacedId(aggregateId, context);
+        const events = __store.get(namespacedId) || [];
         events.push({eventType, payload});
-        __store.set(aggregateId, events);
+        __store.set(namespacedId, events);
 
         this.logger?.debug(
             `[InMemoryEventStore] Event appended`,
@@ -36,9 +41,10 @@ export class InMemoryEventStore implements EventStore {
     }
 
     public async loadEvents(aggregateId: string, context: Record<string, any> = {}): Promise<Event[]> {
-        const events = __store.get(aggregateId) || [];
+        const namespacedId = getNamespacedId(aggregateId, context);
+        const events = __store.get(namespacedId) || [];
 
-        this.logger?.debug(`[InMemoryEventStore] Loading ${events.length} events for aggregateId: ${aggregateId}`, events, context);
+        this.logger?.debug(`[InMemoryEventStore] Loading ${events.length} events for aggregateId: ${namespacedId}`, events, context);
 
         return events.map(({eventType, payload}) => rehydrateEvent(eventType, payload));
     }
